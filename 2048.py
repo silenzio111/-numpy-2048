@@ -4,7 +4,7 @@ import keyboard
 import warnings
 import os
 from time import sleep
-warnings.filterwarnings('ignore') # 忽略numpy的警告
+warnings.filterwarnings('ignore') # 忽略numpy的警告,如果不加,numpy会警告将来有一天会不支持部分操作,详情请去掉这行代码运行查看
 
 
 global game_array
@@ -31,13 +31,13 @@ def basic_operate(array):    # 默认向下
         # 将结果重新整形成原始数组的形状
         sorted_arr = sorted_arr.reshape(arr.shape)
         
-        
+        # 这里偷懒了,用了比较笨的方法实现数字的相消
         sub = sorted_arr
         a = sub[0] == sub[1]
         b = sub[1] == sub[2]
         c = sub[2] == sub[3]
         d = sub[0] != sub[1] and sub[1] != sub[2] and sub[2] != sub [3]
-             
+        # 直接穷举所有情况,并对游戏数组进行修改,正因为这样,才写的这么长     
         if a :
                 if a and b and c :  #[2,2,2,2] -> [0,0,4,4]
                     collapse[0][i] = 0
@@ -89,29 +89,31 @@ def basic_operate(array):    # 默认向下
         
     display_array = collapse.astype(int)    # 转换为整型数组            # OK
     return display_array
-   
-def down_operate(arr):
+#定义完基本的消去操作,然后进行具体的实现
+
+def down_operate(arr):     #下
         display_array = basic_operate(arr)
         return display_array
                                                
-def  right_operate(arr):
+def  right_operate(arr):    #右
         array  = np.rot90(arr, -1)
         a = basic_operate(array)
         display_array = np.rot90(a,1)
         return display_array                       
     
-def up_operate(arr):
+def up_operate(arr):        #上
         array  = np.rot90(arr, -2)
         a = basic_operate(array)
         display_array = np.rot90(a,2)
         return display_array
         
-def left_operate(arr):
+def left_operate(arr):       #左
         array  = np.rot90(arr, -3)
         a = basic_operate(array)
         display_array = np.rot90(a,3)
         return display_array
-                     
+    
+# 这个函数名没起好,实际上是初始化数组后向数组添加两个元素                     
 def array_operate(n):
     for i in range(n):
         postions_row = rd.randint(0,3)
@@ -119,7 +121,7 @@ def array_operate(n):
         
         value = rd.choice(fixed_number)
         game_array[postions_row][postions_column] = value
-
+# 如名字
 def check_avilable_position():
    
     global avilable_positions_array
@@ -132,15 +134,13 @@ def from_available_position_generate():
     global position
     shape = np.shape(avilable_positions_array)
     row_number = shape[0] - 1
-    try:
-        
-        
+    try:     
         position = rd.randint(0,row_number)
         random_position_array = avilable_positions_array[position,:]
         value = rd.choice(fixed_number)
         game_array[random_position_array[0]][random_position_array[1]] = value
         
-        v = False
+        v = False    #发送状态码
         return v
           
     except ValueError or IndexError:
@@ -148,13 +148,13 @@ def from_available_position_generate():
         v = True
         return v
  
- 
+ # 刷新终端
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def update_terminal():
     clear_terminal()
-    print("----------------")
+    print("----------------")  # 上边框
     for i, row in enumerate(game_array):
         # 打印每一行的内容
         for j, value in enumerate(row):
@@ -165,11 +165,11 @@ def update_terminal():
 
                 print(f" {get_colored_char(value)}")
     
-    print("----------------")
+    print("----------------")    #下边框
     v = from_available_position_generate() #get game conditon
     if v : print("no space warning ! maybe you have died,press q to exit ")
 
-
+#设置数字的颜色
 def get_colored_char(value):
     color = get_color(value)
     if value != 0:
@@ -204,7 +204,7 @@ def get_color(value):
     else:
         return 15  # 默认白色
 
-    
+# 主程序    
 def main():
     array_operate(2)
     global game_array
@@ -236,6 +236,6 @@ def main():
             elif keyboard.is_pressed("q"):
                 print('Good game！')
                 condition = False
-
+# 2048启动
 main()
 
