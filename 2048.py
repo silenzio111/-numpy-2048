@@ -31,7 +31,7 @@ def basic_operate(array):    # 默认向下
         # 将结果重新整形成原始数组的形状
         sorted_arr = sorted_arr.reshape(arr.shape)
         
-        
+        #比较笨的方法合并数字
         sub = sorted_arr
         a = sub[0] == sub[1]
         b = sub[1] == sub[2]
@@ -147,7 +147,7 @@ def from_available_position_generate():
         v = True
         return v
  
- 
+ #显示模块
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -202,7 +202,7 @@ def get_color(value):
     else:
         return 15  # 默认白色
 
-    
+#主程序    
 def main():
     array_operate(2)
     global game_array
@@ -235,6 +235,6 @@ def main():
             elif keyboard.is_pressed("q"):
                 print('Good game！')
                 condition = False
-
+#2048启动
 main()
 
