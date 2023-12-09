@@ -94,7 +94,8 @@ def basic_operate(array):    # 默认向下
 def down_operate(arr):     #下
         display_array = basic_operate(arr)
         return display_array
-                                               
+    
+# 只用旋转数组,处理完再转回来就可以了                                               
 def  right_operate(arr):    #右
         array  = np.rot90(arr, -1)
         a = basic_operate(array)
